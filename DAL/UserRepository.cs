@@ -124,7 +124,7 @@ namespace DAL
 
         public UserModel Authenticate(string username, string password)
         {
-            throw new NotImplementedException();
+            return GetUser(username, password);
         }
     }
 }
