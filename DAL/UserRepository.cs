@@ -83,6 +83,7 @@ namespace DAL
             if (!string.IsNullOrEmpty(msgError)) throw new Exception(msgError);
 
             var user = new UserModel();
+
             if (dt.Rows.Count > 0)
             {
                 var row = dt.Rows[0];
