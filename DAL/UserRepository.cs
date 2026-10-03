@@ -121,6 +121,24 @@ namespace DAL
             }
             return list;
         }
+        public UserModel GetByUsername(string username)
+        {
+            string msgError = "";
+            var dt = _dbHelper.ExecuteQuery("sp_user_get_by_username", out msgError, "@taikhoan", username);
+            if (!string.IsNullOrEmpty(msgError)) throw new Exception(msgError);
+
+            if (dt.Rows.Count == 0) return null;
+
+            var row = dt.Rows[0];
+            var user = new UserModel();
+            user.user_id = row["user_id"].ToString();
+            user.hoten = row["hoten"].ToString();
+            user.taikhoan = row["taikhoan"].ToString();
+            user.matkhau = row["matkhau"].ToString(); // giữ hash để so sánh ở tầng Business
+            user.role = row["role"].ToString();
+            user.image_url = row["image_url"] == DBNull.Value ? null : row["image_url"].ToString();
+            return user;
+        }
 
         public UserModel Authenticate(string username, string password)
         {

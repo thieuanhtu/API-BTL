@@ -1,9 +1,9 @@
 ﻿using Model;
 using System.Collections.Generic;
 
-namespace DAL
+namespace BLL
 {
-    public interface INewsRepository
+    public interface INewsBusiness
     {
         NewsModel GetDatabyID(int id);
         bool Create(NewsModel model);

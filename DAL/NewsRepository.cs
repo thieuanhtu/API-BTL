@@ -20,9 +20,9 @@ namespace DAL
         {
             string msgError = "";
             _dbHelper.ExecuteScalar("sp_news_create", out msgError,
-                "@news_id", model.NewsId,
                 "@title", model.Title,
-                "@content", model.Content);
+                "@content", model.Content,
+                "@image_url", model.ImageUrl);
             return string.IsNullOrEmpty(msgError);
         }
 
@@ -32,18 +32,19 @@ namespace DAL
             _dbHelper.ExecuteScalar("sp_news_update", out msgError,
                 "@news_id", model.NewsId,
                 "@title", model.Title,
-                "@content", model.Content);
+                "@content", model.Content,
+                "@image_url", model.ImageUrl);
             return string.IsNullOrEmpty(msgError);
         }
 
-        public bool Delete(string id)
+        public bool Delete(int id)
         {
             string msgError = "";
             _dbHelper.ExecuteScalar("sp_news_delete", out msgError, "@news_id", id);
             return string.IsNullOrEmpty(msgError);
         }
 
-        public NewsModel GetDatabyID(string id)
+        public NewsModel GetDatabyID(int id)
         {
             string msgError = "";
             var dt = _dbHelper.ExecuteQuery("sp_news_get_by_id", out msgError, "@news_id", id);
@@ -56,6 +57,8 @@ namespace DAL
                 news.NewsId = Convert.ToInt32(row["news_id"]);
                 news.Title = row["title"].ToString();
                 news.Content = row["content"].ToString();
+                news.ImageUrl = row["image_url"] == DBNull.Value ? null : row["image_url"].ToString();
+                news.CreatedDate = Convert.ToDateTime(row["created_date"]);
             }
             return news;
         }
@@ -81,6 +84,8 @@ namespace DAL
                     news.NewsId = Convert.ToInt32(row["news_id"]);
                     news.Title = row["title"].ToString();
                     news.Content = row["content"].ToString();
+                    news.ImageUrl = row["image_url"] == DBNull.Value ? null : row["image_url"].ToString();
+                    news.CreatedDate = Convert.ToDateTime(row["created_date"]);
                     list.Add(news);
                 }
             }
