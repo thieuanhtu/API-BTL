@@ -7,5 +7,6 @@
         public string item_name { get; set; } = string.Empty;
         public string item_image { get; set; } = string.Empty;
         public decimal item_price { get; set; }
+        public bool? is_combo { get; set; }
     }
 }

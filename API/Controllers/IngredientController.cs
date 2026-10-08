@@ -2,46 +2,49 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
-    public class ItemGroupController : ControllerBase
+    [Authorize(Roles = "Admin,Bep")]
+    public class IngredientController : ControllerBase
     {
-        private readonly IItemGroupBusiness _itemGroupBusiness;
+        private readonly IIngredientBusiness _ingredientBusiness;
 
-        public ItemGroupController(IItemGroupBusiness itemGroupBusiness)
+        public IngredientController(IIngredientBusiness ingredientBusiness)
         {
-            _itemGroupBusiness = itemGroupBusiness;
+            _ingredientBusiness = ingredientBusiness;
         }
-        [Authorize(Roles = "Admin")]
+
         [HttpPost("create")]
-        public IActionResult Create([FromBody] ItemGroupModel model)
+        public IActionResult Create([FromBody] IngredientModel model)
         {
-            var result = _itemGroupBusiness.Create(model);
+            var result = _ingredientBusiness.Create(model);
             return Ok(new { success = result });
         }
-        [Authorize(Roles = "Admin")]
+
         [HttpPost("update")]
-        public IActionResult Update([FromBody] ItemGroupModel model)
+        public IActionResult Update([FromBody] IngredientModel model)
         {
-            var result = _itemGroupBusiness.Update(model);
+            var result = _ingredientBusiness.Update(model);
             return Ok(new { success = result });
         }
 
         [HttpGet("get-by-id/{id}")]
         public IActionResult GetDatabyID(string id)
         {
-            var data = _itemGroupBusiness.GetDatabyID(id);
+            var data = _ingredientBusiness.GetDatabyID(id);
             return Ok(data);
         }
-        [Authorize(Roles = "Admin")]
+
         [HttpDelete("delete/{id}")]
         public IActionResult Delete(string id)
         {
-            var result = _itemGroupBusiness.Delete(id);
+            var result = _ingredientBusiness.Delete(id);
             return Ok(new { success = result });
         }
 
@@ -52,10 +55,10 @@ namespace API.Controllers
             {
                 int pageIndex = int.Parse(formData["pageIndex"].ToString());
                 int pageSize = int.Parse(formData["pageSize"].ToString());
-                string itemGroupName = formData.Keys.Contains("itemGroupName") ? Convert.ToString(formData["itemGroupName"]) : null;
+                string ingredientName = formData.Keys.Contains("ingredientName") ? Convert.ToString(formData["ingredientName"]) : null;
 
                 long total = 0;
-                var data = _itemGroupBusiness.Search(pageIndex, pageSize, out total, itemGroupName);
+                var data = _ingredientBusiness.Search(pageIndex, pageSize, out total, ingredientName);
                 return Ok(new { TotalItems = total, Data = data, PageIndex = pageIndex, PageSize = pageSize });
             }
             catch (Exception ex)

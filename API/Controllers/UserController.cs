@@ -15,6 +15,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class UserController : ControllerBase
     {
         private readonly IUserBusiness _userBusiness;
@@ -25,35 +26,35 @@ namespace API.Controllers
             _userBusiness = userBusiness;
             _configuration = configuration;
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public IActionResult Create([FromBody] UserModel model)
         {
             var result = _userBusiness.Create(model);
             return Ok(new { success = result });
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("update")]
         public IActionResult Update([FromBody] UserModel model)
         {
             var result = _userBusiness.Update(model);
             return Ok(new { success = result });
         }
-
+        [Authorize]
         [HttpGet("get-by-id/{id}")]
         public IActionResult GetDatabyID(string id)
         {
             var data = _userBusiness.GetDatabyID(id);
             return Ok(data);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public IActionResult Delete(string id)
         {
             var result = _userBusiness.Delete(id);
             return Ok(new { success = result });
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("search")]
         public IActionResult Search([FromBody] Dictionary<string, object> formData)
         {

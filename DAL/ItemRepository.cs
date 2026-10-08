@@ -99,5 +99,40 @@ namespace DAL
             }
             return list;
         }
+        public bool AddComboItem(string comboId, string itemId, int quantity)
+        {
+            string msgError = "";
+            _dbHelper.ExecuteScalar("sp_combo_item_add", out msgError,
+                "@combo_id", comboId, "@item_id", itemId, "@quantity", quantity);
+            return string.IsNullOrEmpty(msgError);
+        }
+
+        public bool RemoveComboItem(string comboId, string itemId)
+        {
+            string msgError = "";
+            _dbHelper.ExecuteScalar("sp_combo_item_remove", out msgError,
+                "@combo_id", comboId, "@item_id", itemId);
+            return string.IsNullOrEmpty(msgError);
+        }
+
+        public List<ComboItemModel> GetComboItems(string comboId)
+        {
+            string msgError = "";
+            var dt = _dbHelper.ExecuteQuery("sp_combo_get_items", out msgError, "@combo_id", comboId);
+            if (!string.IsNullOrEmpty(msgError)) throw new Exception(msgError);
+
+            var list = new List<ComboItemModel>();
+            foreach (DataRow row in dt.Rows)
+            {
+                var ci = new ComboItemModel();
+                ci.combo_id = row["combo_id"].ToString();
+                ci.item_id = row["item_id"].ToString();
+                ci.quantity = Convert.ToInt32(row["quantity"]);
+                ci.item_name = row["item_name"].ToString();
+                ci.item_price = Convert.ToDecimal(row["item_price"]);
+                list.Add(ci);
+            }
+            return list;
+        }
     }
 }

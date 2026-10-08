@@ -1,3 +1,4 @@
+using API.Hubs;
 using BLL;
 using DAL;
 using DAL.Helper;
@@ -8,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
 // Cấu hình xác thực JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -23,10 +25,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
+
+        // SignalR gửi token qua query string (?access_token=...)
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 // Thêm Controllers
 builder.Services.AddControllers();
+
+// Thêm SignalR (realtime)
+builder.Services.AddSignalR();
+
+// Cho phép trang test gọi vào API
+builder.Services.AddCors(o => o.AddPolicy("DevCors", p =>
+    p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 // Thêm Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -49,7 +73,7 @@ builder.Services.AddTransient<IItemGroupBusiness, ItemGroupBusiness>();
 
 builder.Services.AddTransient<IItemRepository, ItemRepository>();
 builder.Services.AddTransient<IItemBusiness, ItemBusiness>();
-//controller
+
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<ICustomerBusiness, CustomerBusiness>();
 
@@ -59,6 +83,20 @@ builder.Services.AddTransient<IUserBusiness, UserBusiness>();
 builder.Services.AddTransient<INewsRepository, NewsRepository>();
 builder.Services.AddTransient<INewsBusiness, NewsBusiness>();
 
+builder.Services.AddTransient<IKitchenTicketRepository, KitchenTicketRepository>();
+builder.Services.AddTransient<IKitchenTicketBusiness, KitchenTicketBusiness>();
+
+builder.Services.AddTransient<IIngredientRepository, IngredientRepository>();
+builder.Services.AddTransient<IIngredientBusiness, IngredientBusiness>();
+
+builder.Services.AddTransient<IRecipeRepository, RecipeRepository>();
+builder.Services.AddTransient<IRecipeBusiness, RecipeBusiness>();
+
+builder.Services.AddTransient<IPromotionRepository, PromotionRepository>();
+builder.Services.AddTransient<IPromotionBusiness, PromotionBusiness>();
+
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
+builder.Services.AddTransient<IReportBusiness, ReportBusiness>();
 
 var app = builder.Build();
 
@@ -68,8 +106,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("DevCors");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<KitchenHub>("/hubs/kitchen");
 
 app.Run();

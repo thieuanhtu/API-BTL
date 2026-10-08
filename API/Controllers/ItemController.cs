@@ -10,6 +10,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ItemController : ControllerBase
     {
         private readonly IItemBusiness _itemBusiness;
@@ -19,6 +20,7 @@ namespace API.Controllers
             _itemBusiness = itemBusiness;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public IActionResult Create([FromBody] ItemModel model)
         {
@@ -26,6 +28,7 @@ namespace API.Controllers
             return Ok(new { success = result });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("update")]
         public IActionResult Update([FromBody] ItemModel model)
         {
@@ -39,7 +42,7 @@ namespace API.Controllers
             var data = _itemBusiness.GetDatabyID(id);
             return Ok(data);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete/{id}")]
         public IActionResult Delete(string id)
         {
@@ -65,6 +68,32 @@ namespace API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("add-combo-item")]
+        public IActionResult AddComboItem([FromBody] Dictionary<string, object> formData)
+        {
+            string comboId = formData["comboId"].ToString();
+            string itemId = formData["itemId"].ToString();
+            int quantity = int.Parse(formData["quantity"].ToString());
+            var result = _itemBusiness.AddComboItem(comboId, itemId, quantity);
+            return Ok(new { success = result });
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost("remove-combo-item")]
+        public IActionResult RemoveComboItem([FromBody] Dictionary<string, string> formData)
+        {
+            string comboId = formData["comboId"];
+            string itemId = formData["itemId"];
+            var result = _itemBusiness.RemoveComboItem(comboId, itemId);
+            return Ok(new { success = result });
+        }
+
+        [HttpGet("get-combo-items/{comboId}")]
+        public IActionResult GetComboItems(string comboId)
+        {
+            var data = _itemBusiness.GetComboItems(comboId);
+            return Ok(data);
         }
     }
 }

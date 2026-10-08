@@ -10,6 +10,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class NewsController : ControllerBase
     {
         private readonly INewsBusiness _newsBusiness;

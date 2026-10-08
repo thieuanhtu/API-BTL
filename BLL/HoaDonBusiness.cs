@@ -12,6 +12,14 @@ namespace BLL
         {
             _res = res;
         }
+        public bool TransferTable(string maHoaDon, string newTableId) => _res.TransferTable(maHoaDon, newTableId);
+
+        public bool Merge(string maHoaDonMain, string maHoaDonSub) => _res.Merge(maHoaDonMain, maHoaDonSub);
+
+        public bool Split(string maHoaDonSource, string maHoaDonNew, string newTableId, List<string> listMaChiTiet)
+            => _res.Split(maHoaDonSource, maHoaDonNew, newTableId, listMaChiTiet);
+
+        public bool Pay(string maHoaDon) => _res.Pay(maHoaDon);
 
         public bool Create(HoaDonModel model) => _res.Create(model);
         public bool Update(HoaDonModel model) => _res.Update(model);

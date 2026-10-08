@@ -4,6 +4,7 @@ using Model;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Newtonsoft.Json;
 
 
 
@@ -126,6 +127,44 @@ namespace DAL
                     ? Newtonsoft.Json.JsonConvert.DeserializeObject<List<ChiTietHoaDonModel>>(raw.listjson_chitiet)
                     : null
             };
+        }
+        public bool TransferTable(string maHoaDon, string newTableId)
+        {
+            _dbHelper.Execute("sp_hoa_don_transfer_table", new
+            {
+                ma_hoa_don = maHoaDon,
+                new_table_id = newTableId
+            }, CommandType.StoredProcedure);
+            return true;
+        }
+
+        public bool Merge(string maHoaDonMain, string maHoaDonSub)
+        {
+            _dbHelper.Execute("sp_hoa_don_merge", new
+            {
+                ma_hoa_don_main = maHoaDonMain,
+                ma_hoa_don_sub = maHoaDonSub
+            }, CommandType.StoredProcedure);
+            return true;
+        }
+        public bool Pay(string maHoaDon)
+        {
+            _dbHelper.Execute("sp_hoa_don_pay", new
+            {
+                ma_hoa_don = maHoaDon
+            }, CommandType.StoredProcedure);
+            return true;
+        }
+        public bool Split(string maHoaDonSource, string maHoaDonNew, string newTableId, List<string> listMaChiTiet)
+        {
+            _dbHelper.Execute("sp_hoa_don_split", new
+            {
+                ma_hoa_don_source = maHoaDonSource,
+                ma_hoa_don_new = maHoaDonNew,
+                new_table_id = newTableId,
+                list_ma_chi_tiet = JsonConvert.SerializeObject(listMaChiTiet)
+            }, CommandType.StoredProcedure);
+            return true;
         }
 
 

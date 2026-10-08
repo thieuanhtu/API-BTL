@@ -5,6 +5,10 @@ namespace BLL
 {
     public interface IHoaDonBusiness
     {
+        bool TransferTable(string maHoaDon, string newTableId);
+        bool Merge(string maHoaDonMain, string maHoaDonSub);
+        bool Split(string maHoaDonSource, string maHoaDonNew, string newTableId, List<string> listMaChiTiet);
+        bool Pay(string maHoaDon);
         bool Create(HoaDonModel model);
         bool Update(HoaDonModel model);
         HoaDonModel GetDatabyID(string id);
