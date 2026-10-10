@@ -1,5 +1,7 @@
 <Solution>
-  <Project Path="API/API.csproj" />
+  <Project Path="API.Auth/API.Auth.csproj" Id="3783df23-1786-49c3-8def-ec29365f6af1" />
+  <Project Path="API.Menu/API.Menu.csproj" Id="a5a921c9-f4df-4a4e-945c-dfebdead3ca1" />
+  <Project Path="API/API.Order.csproj" />
   <Project Path="BLL/BLL.csproj" />
   <Project Path="DAL/DAL.csproj" />
   <Project Path="Model/Model.csproj" />
