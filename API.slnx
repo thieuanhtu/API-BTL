@@ -4,5 +4,6 @@
   <Project Path="API/API.Order.csproj" />
   <Project Path="BLL/BLL.csproj" />
   <Project Path="DAL/DAL.csproj" />
+  <Project Path="Gateway/Gateway.csproj" Id="bc25ce77-bec3-4c53-a62f-dad93f209599" />
   <Project Path="Model/Model.csproj" />
 </Solution>

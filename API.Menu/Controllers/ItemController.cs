@@ -58,7 +58,7 @@ namespace API.Controllers
                 int pageIndex = int.Parse(formData["pageIndex"].ToString());
                 int pageSize = int.Parse(formData["pageSize"].ToString());
                 string itemGroupId = formData.Keys.Contains("itemGroupId") ? Convert.ToString(formData["itemGroupId"]) : null;
-                string itemName = formData.Keys.Contains("itemName") ? Convert.ToString(formData["itemName"]) : null;
+                string itemName = formData.Keys.Contains("itemName") ? Convert.ToString(formData["itemName"]) : "";
 
                 long total = 0;
                 var data = _itemBusiness.Search(pageIndex, pageSize, out total, itemGroupId, itemName);

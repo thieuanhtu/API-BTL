@@ -10,7 +10,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Cấu hình xác thực JWT
+// Xác thực JWT (cùng khóa với API.Auth và API.Menu)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -42,21 +42,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Thêm Controllers
 builder.Services.AddControllers();
 
-// Thêm SignalR (realtime)
+// Realtime (SignalR)
 builder.Services.AddSignalR();
 
-// Cho phép trang test gọi vào API
 builder.Services.AddCors(o => o.AddPolicy("DevCors", p =>
     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-// Thêm Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Đăng ký DatabaseHelper
+// DatabaseHelper
 builder.Services.AddSingleton<IDatabaseHelper>(sp =>
 {
     var helper = new DatabaseHelper();
@@ -64,36 +61,15 @@ builder.Services.AddSingleton<IDatabaseHelper>(sp =>
     return helper;
 });
 
-// Đăng ký Repository + Business
+// Nhóm bán hàng: hóa đơn, bếp, khách hàng, báo cáo
 builder.Services.AddTransient<IHoaDonRepository, HoaDonRepository>();
 builder.Services.AddTransient<IHoaDonBusiness, HoaDonBusiness>();
-
-builder.Services.AddTransient<IItemGroupRepository, ItemGroupRepository>();
-builder.Services.AddTransient<IItemGroupBusiness, ItemGroupBusiness>();
-
-builder.Services.AddTransient<IItemRepository, ItemRepository>();
-builder.Services.AddTransient<IItemBusiness, ItemBusiness>();
-
-builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
-builder.Services.AddTransient<ICustomerBusiness, CustomerBusiness>();
-
-builder.Services.AddTransient<IUserRepository, UserRepository>();
-builder.Services.AddTransient<IUserBusiness, UserBusiness>();
-
-builder.Services.AddTransient<INewsRepository, NewsRepository>();
-builder.Services.AddTransient<INewsBusiness, NewsBusiness>();
 
 builder.Services.AddTransient<IKitchenTicketRepository, KitchenTicketRepository>();
 builder.Services.AddTransient<IKitchenTicketBusiness, KitchenTicketBusiness>();
 
-builder.Services.AddTransient<IIngredientRepository, IngredientRepository>();
-builder.Services.AddTransient<IIngredientBusiness, IngredientBusiness>();
-
-builder.Services.AddTransient<IRecipeRepository, RecipeRepository>();
-builder.Services.AddTransient<IRecipeBusiness, RecipeBusiness>();
-
-builder.Services.AddTransient<IPromotionRepository, PromotionRepository>();
-builder.Services.AddTransient<IPromotionBusiness, PromotionBusiness>();
+builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
+builder.Services.AddTransient<ICustomerBusiness, CustomerBusiness>();
 
 builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IReportBusiness, ReportBusiness>();
