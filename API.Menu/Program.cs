@@ -5,6 +5,7 @@ using DAL.Helper.Interfaces;
 using DAL.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +33,30 @@ builder.Services.AddCors(o => o.AddPolicy("DevCors", p =>
     p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Swagger có nút Authorize để dán token
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Dán token vào đây (không cần gõ chữ Bearer)"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // DatabaseHelper
 builder.Services.AddSingleton<IDatabaseHelper>(sp =>
@@ -42,7 +66,7 @@ builder.Services.AddSingleton<IDatabaseHelper>(sp =>
     return helper;
 });
 
-// Nhóm thực đơn, kho, khuyến mãi, tin tức
+// Nhóm thực đơn, kho, khuyến mãi, tin tức, lựa chọn món
 builder.Services.AddTransient<IItemGroupRepository, ItemGroupRepository>();
 builder.Services.AddTransient<IItemGroupBusiness, ItemGroupBusiness>();
 
@@ -60,6 +84,9 @@ builder.Services.AddTransient<IPromotionBusiness, PromotionBusiness>();
 
 builder.Services.AddTransient<INewsRepository, NewsRepository>();
 builder.Services.AddTransient<INewsBusiness, NewsBusiness>();
+
+builder.Services.AddTransient<IModifierRepository, ModifierRepository>();
+builder.Services.AddTransient<IModifierBusiness, ModifierBusiness>();
 
 var app = builder.Build();
 

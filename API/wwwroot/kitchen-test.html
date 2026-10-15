@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test realtime bếp</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; color: #1c1c1c; }
+  h1 { font-size: 20px; }
+  label { display: block; margin: 12px 0 4px; font-size: 14px; }
+  input { width: 100%; padding: 8px; font-size: 14px; box-sizing: border-box; }
+  button { margin-top: 12px; padding: 8px 16px; font-size: 14px; cursor: pointer; }
+  #state { margin-top: 12px; font-weight: 600; }
+  #log { margin-top: 12px; border: 1px solid #ccc; border-radius: 6px; min-height: 160px; padding: 8px; font-size: 13px; }
+  #log div { padding: 6px 0; border-bottom: 1px solid #eee; word-break: break-all; }
+  .new { color: #0a7a2f; }
+  .status { color: #a35a00; }
+</style>
+</head>
+<body>
+<h1>Test realtime bếp (SignalR)</h1>
+
+<label for="url">Địa chỉ kênh</label>
+<input id="url" value="/hubs/kitchen">
+
+<label for="token">Token (đăng nhập admin hoặc phucvu rồi dán vào đây)</label>
+<input id="token" placeholder="eyJhbGciOi...">
+
+<button id="btn">Kết nối</button>
+<div id="state">Chưa kết nối</div>
+<div id="log"><div>Thông báo sẽ hiện ở đây.</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+<script>
+  const state = document.getElementById('state');
+  const log = document.getElementById('log');
+  let conn = null;
+
+  function add(text, cls) {
+    const d = document.createElement('div');
+    if (cls) d.className = cls;
+    d.textContent = new Date().toLocaleTimeString('vi-VN') + '  ' + text;
+    log.prepend(d);
+  }
+
+  document.getElementById('btn').onclick = async () => {
+    if (conn) { await conn.stop(); conn = null; }
+    conn = new signalR.HubConnectionBuilder()
+      .withUrl(document.getElementById('url').value, {
+        accessTokenFactory: () => document.getElementById('token').value.trim()
+      })
+      .withAutomaticReconnect()
+      .build();
+
+    conn.on('TicketCreated', data => add('Phiếu mới: ' + JSON.stringify(data), 'new'));
+    conn.on('TicketStatusChanged', data => add('Đổi trạng thái: ' + JSON.stringify(data), 'status'));
+    conn.onclose(() => state.textContent = 'Đã ngắt kết nối');
+
+    try {
+      await conn.start();
+      state.textContent = 'Đã kết nối';
+      add('Kết nối thành công, đang chờ thông báo...');
+    } catch (e) {
+      state.textContent = 'Lỗi kết nối';
+      add('Lỗi: ' + e.message);
+    }
+  };
+</script>
+</body>
+</html>

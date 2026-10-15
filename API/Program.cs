@@ -74,6 +74,9 @@ builder.Services.AddTransient<ICustomerBusiness, CustomerBusiness>();
 builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IReportBusiness, ReportBusiness>();
 
+builder.Services.AddTransient<ICafeTableRepository, CafeTableRepository>();
+builder.Services.AddTransient<ICafeTableBusiness, CafeTableBusiness>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -81,7 +84,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStaticFiles();
 app.UseCors("DevCors");
 app.UseAuthentication();
 app.UseAuthorization();
