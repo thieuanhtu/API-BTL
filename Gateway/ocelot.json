@@ -12,7 +12,6 @@
         }
       ]
     },
-
     {
       "UpstreamPathTemplate": "/api/Item/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
@@ -91,7 +90,19 @@
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
-
+    {
+      "UpstreamPathTemplate": "/api/Modifier/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/Modifier/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7035
+        }
+      ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
     {
       "UpstreamPathTemplate": "/api/HoaDon/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
@@ -148,6 +159,19 @@
       "UpstreamPathTemplate": "/api/Report/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "DownstreamPathTemplate": "/api/Report/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44337
+        }
+      ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/api/OrderItemModifier/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/OrderItemModifier/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {

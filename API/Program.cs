@@ -77,6 +77,9 @@ builder.Services.AddTransient<IReportBusiness, ReportBusiness>();
 builder.Services.AddTransient<ICafeTableRepository, CafeTableRepository>();
 builder.Services.AddTransient<ICafeTableBusiness, CafeTableBusiness>();
 
+builder.Services.AddTransient<IModifierRepository, ModifierRepository>();
+builder.Services.AddTransient<IModifierBusiness, ModifierBusiness>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
