@@ -1,6 +1,7 @@
 ﻿using DAL.Helper.Interfaces;
 using DAL.Interfaces;
 using Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -35,6 +36,31 @@ namespace DAL
             return string.IsNullOrEmpty(msgError);
         }
 
+        // Đọc 1 dòng kết quả thành KitchenTicketModel (dùng chung cho GetDatabyID và Search)
+        private static KitchenTicketModel MapRow(DataRow row)
+        {
+            var ticket = new KitchenTicketModel
+            {
+                ticket_id = row["ticket_id"].ToString(),
+                ma_hoa_don = row["ma_hoa_don"].ToString(),
+                station = row["station"].ToString(),
+                status = row["status"].ToString(),
+                created_at = Convert.ToDateTime(row["created_at"]),
+                table_id = row["table_id"] == DBNull.Value ? null : row["table_id"].ToString()
+            };
+
+            if (row["listjson_items"] != DBNull.Value)
+            {
+                var json = row["listjson_items"].ToString();
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    ticket.listjson_items = JsonConvert.DeserializeObject<List<KitchenTicketItemModel>>(json)
+                                            ?? new List<KitchenTicketItemModel>();
+                }
+            }
+            return ticket;
+        }
+
         public KitchenTicketModel GetDatabyID(string id)
         {
             string msgError = "";
@@ -44,12 +70,7 @@ namespace DAL
             var ticket = new KitchenTicketModel();
             if (dt.Rows.Count > 0)
             {
-                var row = dt.Rows[0];
-                ticket.ticket_id = row["ticket_id"].ToString();
-                ticket.ma_hoa_don = row["ma_hoa_don"].ToString();
-                ticket.station = row["station"].ToString();
-                ticket.status = row["status"].ToString();
-                ticket.created_at = Convert.ToDateTime(row["created_at"]);
+                ticket = MapRow(dt.Rows[0]);
             }
             return ticket;
         }
@@ -72,13 +93,7 @@ namespace DAL
                 total = Convert.ToInt64(dt.Rows[0]["RecordCount"]);
                 foreach (DataRow row in dt.Rows)
                 {
-                    var ticket = new KitchenTicketModel();
-                    ticket.ticket_id = row["ticket_id"].ToString();
-                    ticket.ma_hoa_don = row["ma_hoa_don"].ToString();
-                    ticket.station = row["station"].ToString();
-                    ticket.status = row["status"].ToString();
-                    ticket.created_at = Convert.ToDateTime(row["created_at"]);
-                    list.Add(ticket);
+                    list.Add(MapRow(row));
                 }
             }
             return list;

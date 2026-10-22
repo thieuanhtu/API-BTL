@@ -21,7 +21,7 @@
 <h1>Test realtime bếp (SignalR)</h1>
 
 <label for="url">Địa chỉ kênh</label>
-<input id="url" value="/hubs/kitchen">
+<input id="url" value="https://localhost:7053/hubs/kitchen">
 
 <label for="token">Token (đăng nhập admin hoặc phucvu rồi dán vào đây)</label>
 <input id="token" placeholder="eyJhbGciOi...">
@@ -45,12 +45,13 @@
 
   document.getElementById('btn').onclick = async () => {
     if (conn) { await conn.stop(); conn = null; }
-    conn = new signalR.HubConnectionBuilder()
-      .withUrl(document.getElementById('url').value, {
-        accessTokenFactory: () => document.getElementById('token').value.trim()
-      })
-      .withAutomaticReconnect()
-      .build();
+      conn = new signalR.HubConnectionBuilder()
+          .withUrl(document.getElementById('url').value, {
+              accessTokenFactory: () => document.getElementById('token').value.trim(),
+              withCredentials: false
+          })
+          .withAutomaticReconnect()
+          .build();
 
     conn.on('TicketCreated', data => add('Phiếu mới: ' + JSON.stringify(data), 'new'));
     conn.on('TicketStatusChanged', data => add('Đổi trạng thái: ' + JSON.stringify(data), 'status'));

@@ -180,6 +180,31 @@
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/hubs/kitchen/negotiate",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/hubs/kitchen/negotiate",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44337
+        }
+      ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/hubs/kitchen",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/hubs/kitchen",
+      "DownstreamScheme": "wss",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 44337
+        }
+      ]
     }
   ]
 }

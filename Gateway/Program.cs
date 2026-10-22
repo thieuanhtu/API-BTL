@@ -13,6 +13,7 @@ builder.Services.AddCors(o => o.AddPolicy("DevCors", p =>
 var app = builder.Build();
 
 app.UseCors("DevCors");
+app.UseWebSockets(); // bắt buộc để Ocelot chuyển tiếp WebSocket
 await app.UseOcelot();
 
 app.Run();

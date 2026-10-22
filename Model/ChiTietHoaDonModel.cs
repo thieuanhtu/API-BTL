@@ -12,5 +12,13 @@ namespace Model
         public int so_luong { get; set; }
         public float unit_price { get; set; }
         public string? ghi_chu_mon { get; set; }
+        public List<ModifierLineModel> modifiers { get; set; } = new List<ModifierLineModel>();
+    }
+
+    public class ModifierLineModel
+    {
+        public string modifier_id { get; set; } = string.Empty;
+        public string modifier_name { get; set; } = string.Empty;
+        public float extra_price { get; set; }
     }
 }
