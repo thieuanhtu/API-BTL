@@ -47,6 +47,20 @@ namespace API.Controllers
             var result = _hoaDonBusiness.Delete(id);
             return Ok(new { success = result });
         }
+        [Authorize(Roles = "Admin,ThuNgan")]
+        [HttpDelete("remove-item/{maChiTiet}")]
+        public IActionResult RemoveItem(string maChiTiet)
+        {
+            try
+            {
+                var result = _hoaDonBusiness.RemoveItem(maChiTiet);
+                return Ok(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
 
         [HttpPost("search")]
         public IActionResult Search([FromBody] Dictionary<string, object> formData)

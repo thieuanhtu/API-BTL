@@ -93,6 +93,11 @@ namespace DAL
             _dbHelper.Execute("sp_hoa_don_delete", new { ma_hoa_don = id }, CommandType.StoredProcedure);
             return true;
         }
+        public bool RemoveItem(string maChiTiet)
+        {
+            _dbHelper.Execute("sp_hoa_don_remove_item", new { ma_chi_tiet = maChiTiet }, CommandType.StoredProcedure);
+            return true;
+        }
 
         // Class tạm để nhận đúng kiểu string thô từ SQL trả về (không kế thừa HoaDonModel, tránh trùng tên field)
         private sealed class HoaDonRawRow

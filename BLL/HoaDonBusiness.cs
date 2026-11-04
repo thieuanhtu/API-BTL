@@ -24,7 +24,10 @@ namespace BLL
         public bool Create(HoaDonModel model) => _res.Create(model);
         public bool Update(HoaDonModel model) => _res.Update(model);
         public HoaDonModel GetDatabyID(string id) => _res.GetDatabyID(id);
+
+
         public bool Delete(string id) => _res.Delete(id);
+        public bool RemoveItem(string maChiTiet) => _res.RemoveItem(maChiTiet);
         public List<HoaDonModel> Search(int pageIndex, int pageSize, out long total, string hoten, string diachi)
             => _res.Search(pageIndex, pageSize, out total, hoten, diachi);
     }

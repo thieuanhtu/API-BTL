@@ -13,6 +13,7 @@ namespace DAL
         bool Update(HoaDonModel model);
         HoaDonModel GetDatabyID(string id);
         bool Delete(string id);
+        bool RemoveItem(string maChiTiet);
         List<HoaDonModel> Search(int pageIndex, int pageSize, out long total, string hoten, string diachi);
     }
 }
