@@ -40,6 +40,8 @@ namespace BLL
             Kiemtra(model);
             return _res.Update(model);
         }
+        public bool Delete(string id) => _res.Delete(id);
+
 
         public List<CafeTableModel> GetDataAll() => _res.GetDataAll();
     }

@@ -78,7 +78,22 @@ namespace API.Auth.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] UserModel model)
+        {
+            try
+            {
+                var result = _userBusiness.Register(model);
+                if (!result)
+                    return BadRequest(new { success = false, message = "Không đăng ký được, vui lòng thử lại" });
+                return Ok(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginModel model)
         {

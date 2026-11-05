@@ -10,6 +10,7 @@ namespace DAL.Interfaces
         CafeTableModel GetDatabyID(string id);
         bool Create(CafeTableModel model);
         bool Update(CafeTableModel model);
+        bool Delete(string id);
         List<CafeTableModel> GetDataAll();
     }
 }

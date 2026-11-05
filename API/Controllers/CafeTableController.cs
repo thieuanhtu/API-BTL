@@ -62,5 +62,19 @@ namespace API.Controllers
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("delete/{id}")]
+        public IActionResult Delete(string id)
+        {
+            try
+            {
+                var result = _cafeTableBusiness.Delete(id);
+                return Ok(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
     }
 }

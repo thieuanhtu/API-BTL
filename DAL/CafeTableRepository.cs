@@ -56,6 +56,13 @@ namespace DAL
             if (!string.IsNullOrEmpty(msgError)) return false;
             return true;
         }
+        public bool Delete(string id)
+        {
+            string msgError = "";
+            _dbHelper.ExecuteScalar("sp_cafe_table_delete", out msgError, "@table_id", id);
+            if (!string.IsNullOrEmpty(msgError)) throw new Exception(msgError);
+            return true;
+        }
 
         public List<CafeTableModel> GetDataAll()
         {
